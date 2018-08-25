@@ -12,6 +12,7 @@ val akkaVersion = "2.5.15"
 val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 val akkaStreamTestKit = "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test
 val akkaCluster = "com.typesafe.akka" %% "akka-cluster" % akkaVersion
+val akkaClusterTools = "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion
 val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
 val akkaActorTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
 
@@ -25,6 +26,7 @@ val playJson = "com.typesafe.play" %% "play-json" % playVersion
 lazy val captainModelDependencies = Seq(scalaTest, playJson)
 lazy val captainToolDependencies = Seq(scalaTest, pureConfig)
 lazy val sailorDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit)
+lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit)
 
 lazy val `captain-model` = (project in file("captain-model"))
   .settings(
@@ -38,27 +40,28 @@ lazy val `captain-tool` = (project in file("captain-tool"))
     libraryDependencies ++= captainToolDependencies
   )
 
-lazy val `captain-log` = (project in file("captain-log"))
-  .settings(
-    commonSettings,
-    // currently depends on akka event logging, may be better drop this to reduce code size...
-    libraryDependencies += akkaActor
-  )
-
 val sailorJVMOpts = Seq("-Xms32M", "-Xmx256M")
 
-lazy val sailor = (project in file("sailor"))
+lazy val `captain-sailor` = (project in file("captain-sailor"))
   .settings(
     commonSettings,
     libraryDependencies ++= sailorDependencies,
     run / fork := true,
     run / javaOptions ++= sailorJVMOpts
   )
-  .dependsOn(`captain-model`, `captain-log`)
+  .dependsOn(`captain-framework`)
+  .enablePlugins(JavaAppPackaging, JavaServerAppPackaging)
+
+lazy val `captain-framework` = (project in file("captain-framework"))
+  .settings(
+    commonSettings,
+    libraryDependencies ++= captainFrameworkDependencies
+  )
+  .dependsOn(`captain-model`, `captain-tool`)
 
 lazy val captain = (project in file("."))
   .settings(
     name := "captain",
     commonSettings
   )
-  .aggregate(sailor, `captain-model`, `captain-tool`)
+  .aggregate(`captain-sailor`, `captain-model`, `captain-tool`, `captain-framework`)
