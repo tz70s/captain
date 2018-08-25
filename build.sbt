@@ -13,13 +13,23 @@ val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 val akkaStreamTestKit = "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test
 val akkaCluster = "com.typesafe.akka" %% "akka-cluster" % akkaVersion
 
+val pureConfigVersion = "0.9.2"
+val pureConfig = "com.github.pureconfig" %% "pureconfig" % pureConfigVersion
+
 lazy val captainModelLibraries = Seq(scalaTest)
+lazy val captainToolLibraries = Seq(scalaTest, pureConfig)
 lazy val sailorLibraries = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster)
 
 lazy val `captain-model` = (project in file("captain-model"))
   .settings(
     commonSettings,
     libraryDependencies ++= captainModelLibraries
+  )
+
+lazy val `captain-tool` = (project in file("captain-tool"))
+  .settings(
+    commonSettings,
+    libraryDependencies ++= captainToolLibraries
   )
 
 lazy val sailor = (project in file("sailor"))
