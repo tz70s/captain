@@ -1,4 +1,4 @@
-package sailor
+package captain.sailor
 
 import org.scalatest.{FlatSpec, Matchers}
 

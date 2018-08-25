@@ -1,10 +1,10 @@
-package sailor
+package captain.sailor
 
 import akka.actor.ActorSystem
 import akka.event.Logging
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Keep, Sink, Source}
-import sailor.cluster.Coordinator
+import captain.sailor.cluster.{Coordinator, Middleman}
 
 import scala.util.{Failure, Success}
 
@@ -16,6 +16,7 @@ object Sailor {
     implicit val ec = system.dispatcher
 
     val coordinator = system.actorOf(Coordinator.props, "sailor-coordinator")
+    val middleman = system.actorOf(Middleman.props, "sailor-middleman")
 
     val log = Logging(system.eventStream, this.getClass.getName)
 

@@ -1,4 +1,4 @@
-package sailor.cluster
+package captain.sailor.cluster
 
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.cluster.Cluster
