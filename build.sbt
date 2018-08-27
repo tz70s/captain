@@ -26,7 +26,7 @@ val playJson = "com.typesafe.play" %% "play-json" % playVersion
 lazy val captainModelDependencies = Seq(scalaTest, playJson)
 lazy val captainToolDependencies = Seq(scalaTest, pureConfig)
 lazy val sailorDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit)
-lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit)
+lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaClusterTools, akkaActor, akkaActorTestKit)
 
 lazy val `captain-model` = (project in file("captain-model"))
   .settings(

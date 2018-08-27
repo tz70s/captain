@@ -1,6 +1,5 @@
 package captain.message
 
-import captain.message.pubsub.SerializedMessage
 import play.api.libs.json.{Json, OWrites}
 
 /**
@@ -16,3 +15,5 @@ case class Message[T: OWrites](serde: T) {
   override def toString: String = toJson.toString()
   def toSerializedMessage = SerializedMessage(toString)
 }
+
+private[captain] case class SerializedMessage(payload: String)

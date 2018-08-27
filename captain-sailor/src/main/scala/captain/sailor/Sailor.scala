@@ -16,7 +16,6 @@ object Sailor {
     implicit val ec = system.dispatcher
 
     val coordinator = system.actorOf(Coordinator.props, "sailor-coordinator")
-    val middleman = system.actorOf(Middleman.props, "sailor-middleman")
 
     val log = Logging(system.eventStream, this.getClass.getName)
 
