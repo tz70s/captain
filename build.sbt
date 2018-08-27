@@ -15,6 +15,7 @@ val akkaCluster = "com.typesafe.akka" %% "akka-cluster" % akkaVersion
 val akkaClusterTools = "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion
 val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
 val akkaActorTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
+val akkaMultiNodeTestKit = "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion // multi-node plugin should not be marked as test usage here.
 
 val pureConfigVersion = "0.9.2"
 val pureConfig = "com.github.pureconfig" %% "pureconfig" % pureConfigVersion
@@ -26,7 +27,7 @@ val playJson = "com.typesafe.play" %% "play-json" % playVersion
 lazy val captainModelDependencies = Seq(scalaTest, playJson)
 lazy val captainToolDependencies = Seq(scalaTest, pureConfig)
 lazy val sailorDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit)
-lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaClusterTools, akkaActor, akkaActorTestKit)
+lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaClusterTools, akkaActor, akkaActorTestKit, akkaMultiNodeTestKit)
 
 lazy val `captain-model` = (project in file("captain-model"))
   .settings(
@@ -55,9 +56,12 @@ lazy val `captain-sailor` = (project in file("captain-sailor"))
 lazy val `captain-framework` = (project in file("captain-framework"))
   .settings(
     commonSettings,
-    libraryDependencies ++= captainFrameworkDependencies
+    libraryDependencies ++= captainFrameworkDependencies,
+    jvmOptions in MultiJvm := Seq("-Xmx256M")
   )
   .dependsOn(`captain-model`, `captain-tool`)
+  .enablePlugins(MultiJvmPlugin)
+  .configs(MultiJvm)
 
 lazy val captain = (project in file("."))
   .settings(
