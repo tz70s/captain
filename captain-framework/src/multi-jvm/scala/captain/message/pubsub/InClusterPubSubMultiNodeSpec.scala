@@ -13,10 +13,7 @@ import captain.message._
 import scala.concurrent.duration._
 import scala.concurrent.Await
 
-class InClusterPubSubMultiNodeSpec
-    extends MultiNodeSpec(PubSubMultiNodeConfig)
-    with FlatMultiNodeSpec
-    with ImplicitSender {
+class InClusterPubSubMultiNodeSpec extends MultiNodeSpec(PubSubMultiNodeConfig) with FlatMultiNodeSpec {
   import PubSubMultiNodeConfig._
   import PubSubTestProtocol._
 

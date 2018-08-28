@@ -6,7 +6,9 @@ import akka.stream.scaladsl.{Sink, Source}
 import captain.message.{MessageFlow, Topic}
 
 object OutClusterPubSubProtocol {
-  case class OutPublish(topic: Topic)
+  val PUB_SUB_SHARD_NAME = "PubSubShardName"
+
+  case class OutPublish[T](topic: Topic, message: T)
   case class OutSubscribe(topic: Topic, actorRef: ActorRef)
   case class OutSubscribeAck(outSub: OutSubscribe)
 }

@@ -13,6 +13,7 @@ val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 val akkaStreamTestKit = "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test
 val akkaCluster = "com.typesafe.akka" %% "akka-cluster" % akkaVersion
 val akkaClusterTools = "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion
+val akkaClusterSharding = "com.typesafe.akka" %% "akka-cluster-sharding" % akkaVersion
 val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
 val akkaActorTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
 val akkaMultiNodeTestKit = "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion // multi-node plugin should not be marked as test usage here.
@@ -27,7 +28,7 @@ val playJson = "com.typesafe.play" %% "play-json" % playVersion
 lazy val captainModelDependencies = Seq(scalaTest, playJson)
 lazy val captainToolDependencies = Seq(scalaTest, pureConfig)
 lazy val sailorDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit)
-lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaClusterTools, akkaActor, akkaActorTestKit, akkaMultiNodeTestKit)
+lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaClusterTools, akkaClusterSharding, akkaActor, akkaActorTestKit, akkaMultiNodeTestKit)
 
 lazy val `captain-model` = (project in file("captain-model"))
   .settings(

@@ -9,7 +9,9 @@ object PubSubMultiNodeConfig extends MultiNodeConfig {
   val node2 = role("node2")
   val node3 = role("node3")
 
-  commonConfig(ConfigFactory.parseString("""akka.actor.provider = "cluster""""))
+  commonConfig(ConfigFactory.parseString(s"""
+    akka.actor.provider = "cluster"
+   """))
 }
 
 object PubSubTestProtocol {
