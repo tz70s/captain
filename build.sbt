@@ -57,7 +57,8 @@ lazy val `captain-framework` = (project in file("captain-framework"))
   .settings(
     commonSettings,
     libraryDependencies ++= captainFrameworkDependencies,
-    jvmOptions in MultiJvm := Seq("-Xmx256M")
+    jvmOptions in MultiJvm := Seq("-Xmx256M"),
+    coverageEnabled := true
   )
   .dependsOn(`captain-model`, `captain-tool`)
   .enablePlugins(MultiJvmPlugin)

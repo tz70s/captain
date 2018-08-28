@@ -1,4 +1,5 @@
-# captain
+# Captain [![Build Status](https://travis-ci.com/tz70s/captain.svg?token=q2MTgdyCTSXkarGyJWZp&branch=master)](https://travis-ci.com/tz70s/captain)
+
 High velocity microservice framework and building blocks for edge computing.
 
 ## Captain Framework
