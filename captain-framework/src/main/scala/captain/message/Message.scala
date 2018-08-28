@@ -17,3 +17,11 @@ case class Message[T: OWrites](serde: T) {
 }
 
 private[captain] case class SerializedMessage(payload: String)
+
+private[captain] object MessageProtocol {
+
+  /** Determine whether message is in cluster or out cluster */
+  sealed trait ClusterRange
+  case object OutClusterRange extends ClusterRange
+  case object InClusterRange extends ClusterRange
+}

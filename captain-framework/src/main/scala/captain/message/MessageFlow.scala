@@ -1,7 +1,7 @@
 package captain.message
 
 import akka.NotUsed
-import akka.stream.scaladsl.Source
+import akka.stream.scaladsl.{Sink, Source}
 
 case class Topic private[captain] (path: List[String] = List.empty) {
   def /(end: String) = Topic((end :: path.reverse).reverse) // any better way?
@@ -11,6 +11,7 @@ case class Topic private[captain] (path: List[String] = List.empty) {
 }
 
 trait MessageFlow[T] {
-  def publish[T](message: T)
+  def publish(message: T)
+  def publisher: Sink[T, NotUsed]
   def subscriber: Source[T, NotUsed]
 }
