@@ -8,6 +8,9 @@ import captain.message.{MessageFlow, Topic}
 object OutClusterPubSubProtocol {
   val PUB_SUB_SHARD_NAME = "PubSubShardName"
 
+  val OUT_CLUSTER_PUBSUB_MEDIATOR_NAME = "out-cluster-pubsub-mediator"
+  val OUT_CLUSTER_PUBSUB_MEDIATOR_PATH = s"/user/$OUT_CLUSTER_PUBSUB_MEDIATOR_NAME"
+
   case class OutPublish[T](topic: Topic, message: T)
   case class OutSubscribe(topic: Topic, actorRef: ActorRef)
   case class OutSubscribeAck(outSub: OutSubscribe)

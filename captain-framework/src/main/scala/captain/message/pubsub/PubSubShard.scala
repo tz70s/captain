@@ -41,8 +41,8 @@ private[captain] class EmbeddedPubSubShard(implicit system: ActorSystem) {
 
 object PubSubShard {
 
-  /** Helper function to create a shard region, a.k.a. proxy. */
-  def region(implicit system: ActorSystem): ActorRef =
+  /** Helper function to create a shard proxy, a.k.a. proxy. */
+  def proxy(implicit system: ActorSystem): ActorRef =
     ClusterSharding(system).shardRegion(OutClusterPubSubProtocol.PUB_SUB_SHARD_NAME)
 
   def props = Props(new PubSubShard)

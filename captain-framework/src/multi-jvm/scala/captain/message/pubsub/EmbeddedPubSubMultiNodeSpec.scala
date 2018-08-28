@@ -5,7 +5,7 @@ import akka.cluster.ClusterEvent.CurrentClusterState
 import akka.cluster.sharding.{ClusterSharding, ShardRegion}
 import akka.remote.testconductor.RoleName
 import akka.remote.testkit.MultiNodeSpec
-import akka.testkit.{EventFilter, ImplicitSender, TestProbe}
+import akka.testkit.{ImplicitSender, TestProbe}
 import captain.message.pubsub.PubSubMultiNodeConfig.{node1, node2}
 import captain.spec.FlatMultiNodeSpec
 import captain.message._
@@ -22,7 +22,7 @@ class EmbeddedPubSubMultiNodeSpec
   def join(from: RoleName, to: RoleName): Unit = {
     runOn(from) {
       Cluster(system) join node(to).address
-      new EmbeddedPubSubShard
+      new EmbeddedPubSubShard()
     }
     enterBarrier(s"${from.name}-join-${to.name}")
   }
@@ -30,11 +30,9 @@ class EmbeddedPubSubMultiNodeSpec
   behavior of "Embedded PubSub MultiNode"
 
   it should "make sure all members are joined" in {
-    EventFilter.error(pattern = """Has ClusterSharding been started on all nodes?""").intercept {
-      // join node1 and node2 manually.
-      join(node1, node1)
-      join(node2, node1)
-    }
+    // join node1 and node2 manually.
+    join(node1, node1)
+    join(node2, node1)
     awaitAssert {
       Cluster(system).sendCurrentClusterState(testActor)
       expectMsgType[CurrentClusterState].members.size should equal(2)
@@ -56,9 +54,9 @@ class EmbeddedPubSubMultiNodeSpec
 
     runOn(node1) {
       enterBarrier("shard-created-1")
-      val region = PubSubShard.region
+      val proxy = PubSubShard.proxy
       val sub = OutSubscribe("hello" / "world", self)
-      region ! sub
+      proxy ! sub
       expectMsg(5.seconds, OutSubscribeAck(sub))
     }
 

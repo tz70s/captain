@@ -6,7 +6,6 @@ import akka.remote.testkit.MultiNodeSpec
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Source
 import akka.stream.testkit.scaladsl.TestSink
-import akka.testkit.ImplicitSender
 import captain.spec.FlatMultiNodeSpec
 import captain.message._
 
