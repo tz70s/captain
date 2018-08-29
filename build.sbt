@@ -19,6 +19,10 @@ val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
 val akkaActorTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
 val akkaMultiNodeTestKit = "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion // multi-node plugin should not be marked as test usage here.
 
+// Alpakka
+val alpakkaVersion = "0.20"
+val alpakkaMqtt = "com.lightbend.akka" %% "akka-stream-alpakka-mqtt" % alpakkaVersion
+
 val pureConfigVersion = "0.9.2"
 val pureConfig = "com.github.pureconfig" %% "pureconfig" % pureConfigVersion
 
@@ -28,7 +32,7 @@ val playJson = "com.typesafe.play" %% "play-json" % playVersion
 
 lazy val captainModelDependencies = Seq(scalaTest, playJson)
 lazy val captainToolDependencies = Seq(scalaTest, pureConfig)
-lazy val sailorDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit)
+lazy val sailorDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaActor, akkaActorTestKit, alpakkaMqtt)
 lazy val captainFrameworkDependencies = Seq(scalaTest, akkaStream, akkaStreamTestKit, akkaCluster, akkaClusterTools, akkaClusterSharding, akkaActor, akkaActorTestKit, akkaMultiNodeTestKit, akkaDistributedData)
 
 lazy val `captain-model` = (project in file("captain-model"))
