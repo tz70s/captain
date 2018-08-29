@@ -14,6 +14,8 @@ object OutClusterPubSubProtocol {
   case class OutPublish[T](topic: Topic, message: T)
   case class OutSubscribe(topic: Topic, actorRef: ActorRef)
   case class OutSubscribeAck(outSub: OutSubscribe)
+
+  case class OutPublishResponse[T](publish: OutPublish[T], actorRef: ActorRef)
 }
 
 /**

@@ -19,7 +19,7 @@ class OutClusterPubSubMediatorMultiNodeSpec
     with ImplicitSender {
   import captain.message.pubsub.PubSubMultiNodeConfig._
 
-  override def initialParticipants: Int = 1
+  override def initialParticipants: Int = 2
 
   def join(from: RoleName, to: RoleName): Unit = {
     runOn(from) {
@@ -39,28 +39,56 @@ class OutClusterPubSubMediatorMultiNodeSpec
       Cluster(system).sendCurrentClusterState(testActor)
       expectMsgType[CurrentClusterState].members.size should equal(2)
     }
+
+    runOn(node1) { OutClusterPubSubMediator() }
+    runOn(node2) { OutClusterPubSubMediator() }
+
     enterBarrier("join-complete")
   }
 
-  it should "use mediator to communicate correctly" in within(15.seconds) {
+  it should "be used to communicate correctly" in within(15.seconds) {
     runOn(node1) {
-      val mediator = OutClusterPubSubMediator.create
+      val proxy = system.actorOf(OutClusterPubSubProxy.props)
       enterBarrier("subscribe-complete-1")
       // preparing message
       val pub = OutPublish("hello" / "world", DummyMessage("hello"))
-      mediator ! pub
+      proxy ! pub
     }
 
     runOn(node2) {
-      val mediator = OutClusterPubSubMediator.create
+      val proxy = system.actorOf(OutClusterPubSubProxy.props)
       val sub = OutSubscribe("hello" / "world", self)
-      mediator ! sub
+      proxy ! sub
       expectMsg(5.seconds, OutSubscribeAck(sub))
       enterBarrier("subscribe-complete-1")
       expectMsg(5.seconds, DummyMessage("hello"))
     }
 
     enterBarrier("after-1")
+  }
+
+  it should "incremental subscribers and broadcast to them for subscription" in within(15.seconds) {
+    runOn(node1) {
+      val proxy = system.actorOf(OutClusterPubSubProxy.props)
+      val sub = OutSubscribe("share" / "topic", self)
+      proxy ! sub
+      expectMsg(5.seconds, OutSubscribeAck(sub))
+      enterBarrier("subscribe-complete-2")
+      val dummy = DummyMessage("shared hello")
+      proxy ! OutPublish("share" / "topic", dummy)
+      expectMsg(5.seconds, dummy)
+    }
+
+    runOn(node2) {
+      val proxy = system.actorOf(OutClusterPubSubProxy.props)
+      val sub = OutSubscribe("share" / "topic", self)
+      proxy ! sub
+      expectMsg(5.seconds, OutSubscribeAck(sub))
+      enterBarrier("subscribe-complete-2")
+      expectMsg(5.seconds, DummyMessage("shared hello"))
+    }
+
+    enterBarrier("after-2")
   }
 }
 
