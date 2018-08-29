@@ -46,7 +46,7 @@ class MqttConnectorSpec
     val connector = MqttConnector(BrokerAddress("localhost", 1883), MqttClientId("test-client-0"), "test" / "topic", 10)
     val (subscribed, messages) = connector.source.take(dummies.size).toMat(Sink.seq)(Keep.both).run()
 
-    subscribed.futureValue should be(Done)
+    Await.ready(subscribed, 5.seconds)
 
     Source(dummies).runWith(connector.sink)
     messages.futureValue should be(dummies)
