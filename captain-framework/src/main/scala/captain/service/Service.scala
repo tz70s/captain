@@ -19,7 +19,7 @@ trait ActorSystemInjection {
 trait SharableClusterActorSystem extends ActorSystemInjection {
   // TODO: this trait should be along with pubsub messaging service.
   final private val SHARABLE_CLUSTER_ACTOR_SYSTEM = "clustered-actor-system"
-  final implicit lazy override val system = ActorSystem(SHARABLE_CLUSTER_ACTOR_SYSTEM)
+  // final implicit lazy override val system = ActorSystem(SHARABLE_CLUSTER_ACTOR_SYSTEM)
 }
 
 /**

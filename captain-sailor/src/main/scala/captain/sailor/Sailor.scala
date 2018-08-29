@@ -3,10 +3,7 @@ package captain.sailor
 import akka.actor.ActorSystem
 import akka.event.Logging
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{Keep, Sink, Source}
-import captain.sailor.cluster.{Coordinator, Middleman}
-
-import scala.util.{Failure, Success}
+import captain.sailor.cluster.Coordinator
 
 object Sailor {
 
@@ -15,18 +12,7 @@ object Sailor {
     implicit val materializer = ActorMaterializer()
     implicit val ec = system.dispatcher
 
-    val coordinator = system.actorOf(Coordinator.props, "sailor-coordinator")
-
     val log = Logging(system.eventStream, this.getClass.getName)
-
-    val graph = Source(0 to 100)
-      .toMat(Sink.fold(0)(_ + _))(Keep.right)
-
-    graph.run().onComplete {
-      case Success(t) =>
-        log.info(s"result: $t")
-      case Failure(e) =>
-        log.error(s"error occurred, ${e.getMessage}")
-    }
+    val coordinator = system.actorOf(Coordinator.props, "sailor-coordinator")
   }
 }

@@ -1,8 +1,8 @@
 package captain.sailor.connector
 
+import akka.Done
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import akka.stream.alpakka.mqtt.scaladsl.MqttSource
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.testkit.TestKit
 import akka.util.ByteString
@@ -40,4 +40,15 @@ class MqttConnectorSpec
     message.futureValue should be(dummy)
   }
 
+  it should "pipe with multiple messages" in {
+    val dummies = List(ByteString("hello-0"), ByteString("hello-1"), ByteString("hello-2"))
+
+    val connector = MqttConnector(BrokerAddress("localhost", 1883), MqttClientId("test-client-0"), "test" / "topic", 10)
+    val (subscribed, messages) = connector.source.take(dummies.size).toMat(Sink.seq)(Keep.both).run()
+
+    subscribed.futureValue should be(Done)
+
+    Source(dummies).runWith(connector.sink)
+    messages.futureValue should be(dummies)
+  }
 }

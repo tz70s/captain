@@ -3,6 +3,15 @@ language: scala
 scala:
   - 2.12.6
 
+services:
+  - docker
+
+before_install:
+  # bind 1.4.12 version.
+  - docker pull eclipse-mosquitto:1.4.12
+  - docker run -d -p 1883:1883 eclipse-mosquitto:1.4.12
+  - docker ps -a
+
 script:
   - sbt test
   - sbt multi-jvm:test
