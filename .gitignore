@@ -3,3 +3,6 @@
 
 # Scala
 target/
+
+# Currently ignore the docs folder, due to github repo pollution.
+docs/

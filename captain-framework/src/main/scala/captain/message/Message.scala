@@ -10,7 +10,7 @@ import play.api.libs.json.{Json, OWrites}
  *
  * TODO: We should provide some way to validate on the reverse side.
  */
-case class Message[T: OWrites](serde: T) {
+final case class Message[T: OWrites](serde: T) {
   def toJson = Json.toJson(serde)
   override def toString: String = toJson.toString()
   def toSerializedMessage = SerializedMessage(toString)
@@ -18,10 +18,7 @@ case class Message[T: OWrites](serde: T) {
 
 private[captain] case class SerializedMessage(payload: String)
 
-private[captain] object MessageProtocol {
-
-  /** Determine whether message is in cluster or out cluster */
-  sealed trait ClusterRange
-  case object OutClusterRange extends ClusterRange
-  case object InClusterRange extends ClusterRange
-}
+/** Determine whether message is in cluster or out cluster */
+sealed trait ClusterRange
+case object OutClusterRange extends ClusterRange
+case object InClusterRange extends ClusterRange

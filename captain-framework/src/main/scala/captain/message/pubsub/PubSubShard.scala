@@ -39,7 +39,7 @@ private[captain] class EmbeddedPubSubShard(implicit system: ActorSystem) {
   )
 }
 
-object PubSubShard {
+private[captain] object PubSubShard {
 
   /** Helper function to create a shard proxy, a.k.a. proxy. */
   def proxy(implicit system: ActorSystem): ActorRef =
@@ -48,7 +48,7 @@ object PubSubShard {
   def props = Props(new PubSubShard)
 }
 
-class PubSubShard extends Actor with ActorLogging {
+private[captain] class PubSubShard extends Actor with ActorLogging {
   import OutClusterPubSubProtocol._
 
   override def preStart(): Unit = {

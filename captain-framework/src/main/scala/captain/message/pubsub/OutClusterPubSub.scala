@@ -2,10 +2,11 @@ package captain.message.pubsub
 
 import akka.NotUsed
 import akka.actor.{ActorRef, ActorSystem}
+import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Sink, Source}
 import captain.message.{MessageFlow, Topic}
 
-object OutClusterPubSubProtocol {
+private[captain] object OutClusterPubSubProtocol {
   val PUB_SUB_SHARD_NAME = "PubSubShardName"
 
   val OUT_CLUSTER_PUBSUB_MEDIATOR_NAME = "out-cluster-pubsub-mediator"
@@ -23,12 +24,22 @@ object OutClusterPubSubProtocol {
  * In each sailor instances contain several shards to proxy connections from/to upstream (edge clusters or cloud) and protocol bridges.
  * For user perspective, this is encapsulated however.
  */
-class OutClusterPubSub[T] private[captain] (topic: Topic, bufferSize: Int)(implicit system: ActorSystem)
-    extends MessageFlow[T] {
+private[captain] class OutClusterPubSub[T] private[captain] (topic: Topic, bufferSize: Int)(
+    implicit system: ActorSystem
+) extends MessageFlow[T] {
 
-  override def publish(message: T): Unit = ???
+  import OutClusterPubSubProtocol._
 
-  override def publisher: Sink[T, NotUsed] = ???
+  private[this] val proxy = system.actorOf(OutClusterPubSubProxy.props)
 
-  override def subscriber: Source[T, NotUsed] = ???
+  override def publish(message: T): Unit = proxy ! OutPublish(topic, message)
+
+  override def publisher: Sink[T, NotUsed] =
+    Sink.foreach[T](msg => proxy ! OutPublish(topic, msg)).mapMaterializedValue(_ => NotUsed)
+
+  override def subscriber: Source[T, NotUsed] =
+    Source.actorRef(bufferSize, OverflowStrategy.dropHead).mapMaterializedValue { ref =>
+      proxy ! OutSubscribe(topic, ref)
+      NotUsed
+    }
 }

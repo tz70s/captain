@@ -3,7 +3,7 @@ package captain.message
 import akka.NotUsed
 import akka.stream.scaladsl.{Sink, Source}
 
-case class Topic private[captain] (path: List[String] = List.empty) {
+final case class Topic private[captain] (path: List[String] = List.empty) {
   def /(end: String) = Topic((end :: path.reverse).reverse) // any better way?
   def /(postPath: Topic) = Topic(path ::: postPath.path)
 

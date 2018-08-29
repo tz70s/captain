@@ -3,7 +3,6 @@ package captain.sailor.cluster
 import akka.actor.ActorSystem
 import akka.testkit.{ImplicitSender, TestKit}
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
-import captain.message._
 
 class MiddlemanSpec()
     extends TestKit(ActorSystem("middleman-spec-system"))

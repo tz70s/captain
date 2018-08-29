@@ -5,11 +5,11 @@ import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Put, Send}
 import captain.message.pubsub.OutClusterPubSubProtocol.{OutPublish, OutPublishResponse, OutSubscribe, OutSubscribeAck}
 
-object OutClusterPubSubProxy {
+private[captain] object OutClusterPubSubProxy {
   def props = Props(new OutClusterPubSubProxy)
 }
 
-class OutClusterPubSubProxy extends Actor with ActorLogging {
+private[captain] class OutClusterPubSubProxy extends Actor with ActorLogging {
 
   private[this] val mediator = DistributedPubSub(context.system).mediator
 

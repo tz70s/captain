@@ -13,7 +13,7 @@ import captain.message.{MessageFlow, Topic}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class InClusterPubSub[T] private[captain] (val topic: Topic, val bufferSize: Int)(implicit val system: ActorSystem)
+private[captain] class InClusterPubSub[T](val topic: Topic, val bufferSize: Int)(implicit val system: ActorSystem)
     extends MessageFlow[T] {
 
   import akka.cluster.pubsub.DistributedPubSubMediator.{Publish, Subscribe}

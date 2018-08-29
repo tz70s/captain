@@ -11,7 +11,7 @@ import captain.message.pubsub.OutClusterPubSubProtocol.{OutPublish, OutPublishRe
 
 import scala.concurrent.duration._
 
-object OutClusterPubSubMediator {
+private[captain] object OutClusterPubSubMediator {
   // Forcible factory to ensure actor name.
   // This mediator node should be singleton in a local actor system.
   // We'll have to force this creation being bounded.
@@ -52,15 +52,13 @@ private[captain] class OutClusterPubSubMediator extends Actor with ActorLogging 
     case get @ GetSuccess(PubSubKey, Some((pub: OutPublish[_], proxy: ActorRef))) =>
       val predicates = get.get(PubSubKey).get(pub.topic)
       // Broadcast to all subscribers.
-      predicates.foreach(
-        set =>
-          set.foreach(
-            ref =>
-              mediator ! Send(path = proxy.path.toStringWithoutAddress,
-                              msg = OutPublishResponse(pub, ref),
-                              localAffinity = true)
-        )
-      )
+      predicates.foreach { set =>
+        set.foreach { ref =>
+          mediator ! Send(path = proxy.path.toStringWithoutAddress,
+                          msg = OutPublishResponse(pub, ref),
+                          localAffinity = true)
+        }
+      }
 
     // Ignoring get failure now ...
 
