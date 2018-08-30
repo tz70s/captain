@@ -70,9 +70,15 @@ lazy val `captain-framework` = (project in file("captain-framework"))
   .enablePlugins(MultiJvmPlugin)
   .configs(MultiJvm)
 
+lazy val `example` = (project in file("example"))
+  .settings(
+    commonSettings
+  )
+  .dependsOn(`captain-framework`)
+
 lazy val captain = (project in file("."))
   .settings(
     name := "captain",
     commonSettings
   )
-  .aggregate(`captain-sailor`, `captain-model`, `captain-tool`, `captain-framework`)
+  .aggregate(`captain-sailor`, `captain-model`, `captain-tool`, `captain-framework`, `example`)
