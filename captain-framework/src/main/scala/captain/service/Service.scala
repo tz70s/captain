@@ -44,7 +44,7 @@ object Service {
     implicit val mat = ActorMaterializer()
     val ref = implicitly[ClassTag[C]].runtimeClass.getConstructor(classOf[ActorSystem]).newInstance(system)
     val casted = ref.asInstanceOf[C]
-    casted.start
+    casted.start[M, R]
   }
 
   def terminate(): Future[Terminated] = sharableClusterActorSystem.terminate()

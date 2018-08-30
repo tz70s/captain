@@ -15,12 +15,12 @@ class MiniService(implicit system: ActorSystem) extends CallService[IoTMessage, 
 
   log.info(s"Start a MiniService example.")
 
-  private[this] def logIoTData(message: IoTMessage) = {
-    log.info(s"receive message $message")
-    CallSuccess(message)
+  private[this] def logIoTData = CallSync[IoTMessage, IoTMessage] { msg =>
+    log.info(s"receive message $msg")
+    CallSuccess(msg)
   }
 
-  override def descriptor: Descriptor[IoTMessage, IoTMessage] = Descriptor(
+  override val descriptor = Descriptor[IoTMessage, IoTMessage](
     PubSubCallContext("IoT" / "Data" / "Channel") -> logIoTData
   )
 }

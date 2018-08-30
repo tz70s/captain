@@ -17,12 +17,13 @@ class TestService()(implicit system: ActorSystem) extends CallService[TestMessag
 
   log.info(s"Initialize a TestService")
 
-  def logMethod: Call[TestMessage, TestMessage] = { msg =>
+  private[this] def logMethod = CallSync[TestMessage, TestMessage] { msg =>
     println(s"receive $msg")
+    log.info(s"receive $msg")
     CallSuccess(msg)
   }
 
-  override def descriptor = Descriptor(PubSubCallContext("test" / "topic") -> logMethod)
+  override val descriptor = Descriptor(PubSubCallContext("test" / "topic") -> logMethod)
 }
 
 class ServiceSpec extends FlatSpec with Matchers {
