@@ -1,13 +1,37 @@
 package captain.service
 
+import akka.actor.ActorSystem
+import captain.message.topic._
+import captain.service.TestService.TestMessage
 import org.scalatest.{FlatSpec, Matchers}
+import play.api.libs.json.Json
 
-import scala.concurrent.Await
-import scala.concurrent.duration._
+object TestService {
+  case class TestMessage(name: String)
+  implicit val writes = Json.writes[TestMessage]
+  implicit val reads = Json.reads[TestMessage]
+}
+
+class TestService()(implicit system: ActorSystem) extends CallService[TestMessage, TestMessage] with ServiceLogging {
+  import TestService._
+
+  log.info(s"Initialize a TestService")
+
+  def logMethod: Call[TestMessage, TestMessage] = { msg =>
+    println(s"receive $msg")
+    CallSuccess(msg)
+  }
+
+  override def descriptor = Descriptor(PubSubCallContext("test" / "topic") -> logMethod)
+}
 
 class ServiceSpec extends FlatSpec with Matchers {
 
   behavior of "Service"
 
-  it should "normally initialized" in {}
+  it should "normally initialized" in {
+    import TestService._
+    Service.withCall[TestMessage, TestMessage, TestService]()
+    Service.terminate()
+  }
 }

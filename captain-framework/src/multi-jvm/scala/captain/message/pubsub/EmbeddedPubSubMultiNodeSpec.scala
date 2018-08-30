@@ -8,7 +8,7 @@ import akka.remote.testkit.MultiNodeSpec
 import akka.testkit.{ImplicitSender, TestProbe}
 import captain.message.pubsub.PubSubMultiNodeConfig.{node1, node2}
 import captain.spec.FlatMultiNodeSpec
-import captain.message._
+import captain.message.topic._
 
 import scala.concurrent.duration._
 

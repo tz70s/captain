@@ -1,6 +1,6 @@
 package captain.sailor.router
 
-import captain.message.Topic
+import captain.message.topic.Topic
 
 /** Construct DSL for generating routing table. */
 sealed trait RoutingType {

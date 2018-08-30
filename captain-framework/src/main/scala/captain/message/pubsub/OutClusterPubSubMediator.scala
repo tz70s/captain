@@ -6,8 +6,8 @@ import akka.cluster.ddata.Replicator._
 import akka.cluster.ddata._
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Put, Send}
-import captain.message.Topic
 import captain.message.pubsub.OutClusterPubSubProtocol.{OutPublish, OutPublishResponse, OutSubscribe, OutSubscribeAck}
+import captain.message.topic.Topic
 
 import scala.concurrent.duration._
 

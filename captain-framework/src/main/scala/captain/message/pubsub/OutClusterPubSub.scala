@@ -4,7 +4,8 @@ import akka.NotUsed
 import akka.actor.{ActorRef, ActorSystem}
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Sink, Source}
-import captain.message.{MessageFlow, Topic}
+import captain.message.topic.Topic
+import captain.message.MessageFlow
 
 private[captain] object OutClusterPubSubProtocol {
   val PUB_SUB_SHARD_NAME = "PubSubShardName"

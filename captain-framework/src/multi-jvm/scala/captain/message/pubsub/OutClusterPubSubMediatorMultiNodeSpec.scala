@@ -8,7 +8,7 @@ import akka.testkit.ImplicitSender
 import captain.message.pubsub.OutClusterPubSubProtocol.{OutPublish, OutSubscribe, OutSubscribeAck}
 import captain.spec.FlatMultiNodeSpec
 
-import captain.message._
+import captain.message.topic._
 import captain.message.pubsub.PubSubTestProtocol.DummyMessage
 
 import scala.concurrent.duration._

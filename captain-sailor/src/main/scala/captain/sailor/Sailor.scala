@@ -1,7 +1,7 @@
 package captain.sailor
 
 import captain.sailor.router.{MicroService, Mqtt, StartRouter}
-import captain.message._
+import captain.message.topic._
 
 object Sailor extends App {
   StartRouter(

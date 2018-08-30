@@ -7,7 +7,7 @@ import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Source
 import akka.stream.testkit.scaladsl.TestSink
 import captain.spec.FlatMultiNodeSpec
-import captain.message._
+import captain.message.topic._
 
 import scala.concurrent.duration._
 import scala.concurrent.Await

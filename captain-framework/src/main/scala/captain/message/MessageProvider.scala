@@ -1,6 +1,7 @@
 package captain.message
 
 import akka.actor.ActorSystem
+import captain.message.topic.Topic
 import captain.tool.spi.{Spi, SpiLoader}
 
 private[captain] trait MessageProvider extends Spi {

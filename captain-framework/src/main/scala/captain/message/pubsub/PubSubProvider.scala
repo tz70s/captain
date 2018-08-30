@@ -1,8 +1,9 @@
 package captain.message.pubsub
 
 import akka.actor.ActorSystem
+import captain.message.topic.Topic
 import captain.message.{ClusterRange, InClusterRange, OutClusterRange}
-import captain.message.{MessageFlow, MessageProvider, Topic}
+import captain.message.{MessageFlow, MessageProvider}
 
 private[captain] object PubSubProvider extends MessageProvider {
   override final def flowOf[T](topic: Topic, bufferSize: Int, range: ClusterRange)(

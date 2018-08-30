@@ -1,13 +1,19 @@
 package captain.service
 
 import akka.actor.{ActorSystem, Terminated}
+import akka.event.{Logging, LoggingAdapter}
 import akka.stream.ActorMaterializer
-import captain.message.{ClusterRange, MessagingService, Topic}
+import play.api.libs.json.{OWrites, Reads}
 
 import scala.concurrent.Future
+import scala.reflect.ClassTag
 
 trait ActorSystemInjection {
   implicit val system: ActorSystem
+
+  /** Close out resources in this service. */
+  final def terminate(): Future[Terminated] =
+    system.terminate()
 }
 
 /**
@@ -16,26 +22,30 @@ trait ActorSystemInjection {
  * The only purpose is to let pubsub visibility sharable with all microservices, without negotiating protocols.
  * Note: We should deprecate this in the future.
  */
-trait SharableClusterActorSystem extends ActorSystemInjection {
+class SharableClusterActorSystem extends ActorSystemInjection {
   // TODO: this trait should be along with pubsub messaging service.
   final private val SHARABLE_CLUSTER_ACTOR_SYSTEM = "clustered-actor-system"
-  // final implicit lazy override val system = ActorSystem(SHARABLE_CLUSTER_ACTOR_SYSTEM)
+  final implicit lazy override val system = ActorSystem(SHARABLE_CLUSTER_ACTOR_SYSTEM)
 }
 
-/**
- * Service trait is the core interface to implement a single microservice.
- *
- * User (developer) implements this Service trait with several reactions to specific event channel.
- */
-trait Service extends MessagingService {
-  self: ActorSystemInjection =>
+trait ServiceLogging {
+  @volatile private var _log: Option[LoggingAdapter] = None
+  def log(implicit system: ActorSystem) = _log.getOrElse { _log = Some(Logging(system, this.getClass)); _log.get }
+}
 
-  implicit lazy val mat: ActorMaterializer = ActorMaterializer()
+object Service {
 
-  final def actOf[Message](topic: Topic, bufferSize: Int, range: ClusterRange)(reaction: Message => Unit) =
-    messaging.flowOf(topic, bufferSize, range).subscriber.map(message => reaction(message))
+  private[this] lazy val sharableClusterActorSystem = new SharableClusterActorSystem
 
-  /** Close out resources in this service. */
-  final def terminate(): Future[Terminated] =
-    system.terminate()
+  def withCall[M: Reads, R: OWrites, C <: CallService[M, R]: ClassTag](
+      injection: ActorSystemInjection = sharableClusterActorSystem
+  ): Unit = {
+    implicit val system = sharableClusterActorSystem.system
+    implicit val mat = ActorMaterializer()
+    val ref = implicitly[ClassTag[C]].runtimeClass.getConstructor(classOf[ActorSystem]).newInstance(system)
+    val casted = ref.asInstanceOf[C]
+    casted.start
+  }
+
+  def terminate(): Future[Terminated] = sharableClusterActorSystem.terminate()
 }

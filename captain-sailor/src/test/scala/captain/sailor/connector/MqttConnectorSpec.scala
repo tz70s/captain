@@ -1,14 +1,13 @@
 package captain.sailor.connector
 
-import akka.Done
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.testkit.TestKit
 import akka.util.ByteString
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
-import captain.message._
 import org.scalatest.concurrent.ScalaFutures
+import captain.message.topic._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._

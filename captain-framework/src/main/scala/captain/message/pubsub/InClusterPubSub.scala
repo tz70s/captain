@@ -8,7 +8,8 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.Timeout
 import akka.pattern.ask
-import captain.message.{MessageFlow, Topic}
+import captain.message.MessageFlow
+import captain.message.topic.Topic
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

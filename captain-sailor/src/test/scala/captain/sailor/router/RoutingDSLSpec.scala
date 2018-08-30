@@ -1,7 +1,7 @@
 package captain.sailor.router
 
 import org.scalatest.{FlatSpec, Matchers}
-import captain.message._
+import captain.message.topic._
 
 class RoutingDSLSpec extends FlatSpec with Matchers {
 

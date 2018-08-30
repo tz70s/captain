@@ -1,6 +1,13 @@
-package captain
+package captain.message
 
-package object message {
+package object topic {
+  final case class Topic private[captain] (path: List[String] = List.empty) {
+    def /(end: String) = Topic((end :: path.reverse).reverse) // any better way?
+    def /(postPath: Topic) = Topic(path ::: postPath.path)
+
+    override def toString: String = path.mkString("-")
+  }
+
   implicit def stringToPath(topicString: String) =
     if (topicString.length != 0) {
       var path = topicString.split("/")

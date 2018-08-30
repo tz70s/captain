@@ -1,5 +1,6 @@
 package captain.message
 
+import captain.message.topic._
 import org.scalatest.{FlatSpec, Matchers}
 
 class MessageFlowSpec extends FlatSpec with Matchers {

@@ -1,12 +1,12 @@
 package captain.sailor.connector
 
 import akka.stream.ActorMaterializer
-import akka.{Done, NotUsed}
+import akka.Done
 import akka.stream.alpakka.mqtt.scaladsl.{MqttSink, MqttSource}
 import akka.stream.alpakka.mqtt.{MqttConnectionSettings, MqttMessage, MqttQoS, MqttSourceSettings}
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import akka.util.ByteString
-import captain.message.Topic
+import captain.message.topic.Topic
 import captain.sailor.connector.MqttConnector.{BrokerAddress, MqttClientId}
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
